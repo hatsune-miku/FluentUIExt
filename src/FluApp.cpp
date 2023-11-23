@@ -3,7 +3,6 @@
 #include <QQmlEngine>
 #include <QGuiApplication>
 #include <QQmlContext>
-#include <QQuickItem>
 #include <QTimer>
 #include <QUuid>
 #include <QFontDatabase>
@@ -34,16 +33,16 @@ void FluApp::run(){
     navigate(initialRoute());
 }
 
-void FluApp::navigate(const QString& route,const QJsonObject& argument,FluRegister* fluRegister){
+QQuickWindow* FluApp::navigate(const QString& route,const QJsonObject& argument,FluRegister* fluRegister){
     if(!routes().contains(route)){
         qCritical()<<"No route found "<<route;
-        return;
+        return nullptr;
     }
     QQmlEngine *engine = qmlEngine(_application);
     QQmlComponent component(engine, routes().value(route).toString());
     if (component.isError()) {
         qCritical() << component.errors();
-        return;
+        return nullptr;
     }
     QVariantMap properties;
     properties.insert("_route",route);
@@ -66,7 +65,7 @@ void FluApp::navigate(const QString& route,const QJsonObject& argument,FluRegist
             win->show();
             win->raise();
             win->requestActivate();
-            return;
+            return win;
         }else if(launchMode == 2){
             win->close();
         }
@@ -76,6 +75,7 @@ void FluApp::navigate(const QString& route,const QJsonObject& argument,FluRegist
         fluRegister->to(win);
     }
     win->setColor(QColor(Qt::transparent));
+    return win;
 }
 
 void FluApp::exit(int retCode){

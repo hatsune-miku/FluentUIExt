@@ -8,6 +8,7 @@
 #include <QQmlContext>
 #include <QJsonObject>
 #include <QQmlEngine>
+#include <QQuickItem>
 #include "FluRegister.h"
 #include "FluHttpInterceptor.h"
 #include "stdafx.h"
@@ -32,7 +33,7 @@ public:
     SINGLETONG(FluApp)
     static FluApp *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine){return getInstance();}
     Q_INVOKABLE void run();
-    Q_INVOKABLE void navigate(const QString& route,const QJsonObject& argument  = {},FluRegister* fluRegister = nullptr);
+    Q_INVOKABLE QQuickWindow* navigate(const QString& route,const QJsonObject& argument  = {},FluRegister* fluRegister = nullptr);
     Q_INVOKABLE void init(QObject *window);
     Q_INVOKABLE void exit(int retCode = 0);
     void addWindow(QQuickWindow* window);
